@@ -62,10 +62,21 @@
             font-size: 14px;
             box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
             margin-bottom: 10px;
+            display: block;
+            text-decoration: none;
+            box-sizing: border-box;
         }
         .btn-vip {
             background: linear-gradient(135deg, #f59e0b, #d97706);
             box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
         }
         .screen {
             display: none;
@@ -79,11 +90,12 @@
             padding: 12px;
             border-radius: 10px;
             border: 1px solid #1f3059;
-            max-height: 200px;
+            max-height: 160px;
             overflow-y: auto;
             font-size: 12px;
             color: #00d2ff;
             margin-top: 10px;
+            margin-bottom: 10px;
         }
         .bottom-nav {
             position: fixed;
@@ -123,7 +135,6 @@
         .badge-vip {
             background: #f59e0b;
         }
-        /* ڕەنگێ زێڕینی بۆ ناڤی */
         .gold-name {
             color: #fbbf24 !important;
             text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
@@ -132,42 +143,47 @@
 </head>
 <body>
 
-    <!-- 1. پەڕەیا تۆمارکرنێ -->
+    <!-- 1. پەڕەیا تۆمارکرنێ (Login / Register) -->
     <div id="authScreen" class="screen active">
         <div class="box">
             <div class="logo-container">
                 <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=200&auto=format&fit=crop" alt="Logo">
             </div>
             <h2>YUSEEF_SINAN VIP</h2>
-            <p style="font-size: 11px; color: #ffcc00; margin-bottom: 15px;">ناڤ و پاسوۆردێ خۆ بنڤیسە بۆ دروستکرنا هەژماری</p>
+            <p id="authTitle" style="font-size: 11px; color: #ffcc00; margin-bottom: 15px;">ناڤ و پاسوۆردێ خۆ بنڤیسە بۆ دروستکرنا هەژماری</p>
             
             <input type="text" id="regUser" placeholder="ناڤێ خۆ (Username)...">
             <input type="password" id="regPass" placeholder="پاسوۆرد (Password)...">
-            <button class="btn" onclick="registerUser()">تۆمارکرن و چوونا ژوورێ</button>
+            <button class="btn" id="authBtn" onclick="handleAuth()">تۆمارکرن و چوونا ژوورێ</button>
+            <p id="switchAuthMode" style="font-size: 11px; color: #38bdf8; cursor: pointer; margin-top: 10px;" onclick="toggleAuthMode()">هەژمارا تە هەی؟ چوونە ژوورێ (Login)</p>
         </div>
     </div>
 
-    <!-- 2. پەڕەیا سەرەکی یا Unzip -->
+    <!-- 2. پەڕەیا سەرەکی یا URL Unzip -->
     <div id="unzipScreen" class="screen">
         <div class="box">
             <h2>YUSEEF_SINAN UNZIPPER</h2>
-            <!-- لێرە ناڤێ بەکارهێنەری دگەل نیشانا VIP دبیە سەرەتا -->
             <div style="font-size: 13px; margin-bottom: 10px;">
                 بەخێر هاتێ، <span id="welcomeUsername" style="font-weight: bold; color: #00d2ff;"></span>
             </div>
             <p id="userLimitText" style="font-size: 11px; color: #ffcc00; margin-bottom: 12px;"></p>
             
-            <label class="btn" style="display: block; cursor: pointer;">
-                فایلا IPA یان ZIP هەلبژێرە
-                <input type="file" id="fileInput" accept=".ipa,.zip" style="display: none;">
-            </label>
+            <!-- خانەیا وەرگرتنا لینکا URL -->
+            <input type="text" id="fileUrlInput" placeholder="لینکا ڕاستەوخۆ یا IPA/ZIP لێرە دانە...">
+            <button class="btn btn-success" onclick="processUrlFile()">🔗 Verify و داونلۆدکرن</button>
             
             <div id="progressStatus" style="font-size: 12px; color: #38bdf8; font-weight: bold; margin: 8px 0;"></div>
-            <div id="fileList">هێشتا چ فایل نەهاتینە بارکرن...</div>
+            
+            <div id="fileList">هێشتا چ لینک نەهاتییە دانان...</div>
+
+            <!-- دوگمەیا داونلۆدکرنێ بۆ ناڤ Files App -->
+            <div id="downloadContainer" style="display: none;">
+                <a id="downloadBtn" class="btn btn-success" download="Extracted_Payload.zip">📥 داونلۆدکرنا فۆڵدەری بۆ (Files App)</a>
+            </div>
         </div>
     </div>
 
-    <!-- 3. پەڕەیا هەژماری و VIP -->
+    <!-- 3. پەڕەیا هەژماری و VIP و Sign Out -->
     <div id="accountScreen" class="screen">
         <div class="box">
             <h2>هەژمارا من (Account)</h2>
@@ -177,9 +193,12 @@
                 <p>⭐ ڕەوشا هەژماری: <span id="accStatus" style="color: #ef4444; font-weight: bold;">عادی (Standard)</span></p>
             </div>
 
-            <p style="font-size: 11px; color: #ffcc00; margin-bottom: 8px;">ببە VIP بۆ ڤەکرنا فایلێن هەتا 20GB:</p>
-            <input type="password" id="vipCodeInput" placeholder="پاسوۆردێ VIP بنڤیسە...">
-            <button class="btn btn-vip" onclick="activateVip()">چالاککرنا VIP (پاسوۆرد: 777)</button>
+            <p style="font-size: 11px; color: #ffcc00; margin-bottom: 8px;">پاسوۆردێ VIP بنڤیسە (پاسوۆرد: 777):</p>
+            <input type="password" id="vipCodeInput" placeholder="پاسوۆردێ VIP (777)...">
+            <button class="btn btn-vip" onclick="activateVip()">چالاککرنا VIP</button>
+            
+            <!-- دوگمەیا Sign Out -->
+            <button class="btn btn-danger" style="margin-top: 15px;" onclick="signOut()">🚪 چوونا دەرێ (Sign Out)</button>
         </div>
     </div>
 
@@ -198,20 +217,39 @@
 
     <script>
         let currentUser = null;
+        let isLoginMode = false;
+        let vipActiveCode = "777"; // پاسوۆردێ VIPـی یێ تاکی
 
-        function registerUser() {
+        function toggleAuthMode() {
+            isLoginMode = !isLoginMode;
+            let title = document.getElementById('authTitle');
+            let btn = document.getElementById('authBtn');
+            let switchText = document.getElementById('switchAuthMode');
+
+            if(isLoginMode) {
+                title.innerText = "ناڤ و پاسوۆردێ خۆ بنڤیسە بۆ چوونە ژوورێ (Login)";
+                btn.innerText = "چوونە ژوورێ (Login)";
+                switchText.innerText = "هەژمارا تە نینە؟ دروستکرنا هەژمارەک نوو";
+            } else {
+                title.innerText = "ناڤ و پاسوۆردێ خۆ بنڤیسە بۆ دروستکرنا هەژماری";
+                btn.innerText = "تۆمارکرن و چوونا ژوورێ";
+                switchText.innerText = "هەژمارا تە هەی؟ چوونە ژوورێ (Login)";
+            }
+        }
+
+        function handleAuth() {
             let u = document.getElementById('regUser').value.trim();
             let p = document.getElementById('regPass').value.trim();
 
             if(u === "" || p === "") {
-                alert("تکایە ناڤ و پاسوۆردی بنڤیسە!");
+                alert("تکایە ناڤ و پاسوۆردێ خۆ بنڤیسە!");
                 return;
             }
 
             currentUser = {
                 username: u,
                 password: p,
-                id: Math.floor(10000 + Math.random() * 90000).toString(), // ID ژ 5 ژمارەکان پێک دهێت
+                id: Math.floor(10000 + Math.random() * 90000).toString(),
                 isVip: false
             };
 
@@ -220,7 +258,18 @@
             document.getElementById('bottomNav').style.display = 'flex';
 
             updateAccountUI();
-            alert("بەخێر هاتێ، هژمارا تە هاتە دروستکرن!");
+            alert(isLoginMode ? "ب سەرکەفتنی چویە ژوورێ!" : "بەخێر هاتێ، هەژمارا تە هاتە دروستکرن!");
+        }
+
+        function signOut() {
+            currentUser = null;
+            document.getElementById('regUser').value = "";
+            document.getElementById('regPass').value = "";
+            document.getElementById('unzipScreen').classList.remove('active');
+            document.getElementById('accountScreen').classList.remove('active');
+            document.getElementById('bottomNav').style.display = 'none';
+            document.getElementById('authScreen').classList.add('active');
+            alert("بە سەرکەفتنی لە هەژماری دەرکەتی (Sign Out).");
         }
 
         function switchTab(tabName, btn) {
@@ -244,7 +293,6 @@
             let accNameEl = document.getElementById('accName');
 
             if(currentUser.isVip) {
-                // ئەگەر VIP ببت، نیشانەک و ڕەنگێ Gold ل ناڤی زێدە دبت
                 nameDisplay = "👑 " + currentUser.username + " [VIP]";
                 welcomeEl.innerHTML = `<span class="gold-name">${nameDisplay}</span>`;
                 accNameEl.innerHTML = `<span class="gold-name">${nameDisplay}</span>`;
@@ -271,46 +319,56 @@
                 statusSpan.style.color = "#ef4444";
                 badgeSpan.innerText = "Standard";
                 badgeSpan.className = "badge";
-                limitText.innerText = "📦 سنۆرێ عادی: هەتا 4GB (د 35 چرکەیان دا دئێخە دەر)";
+                limitText.innerText = "📦 سنۆرێ عادی: هەتا 4GB (داونلۆد و ڤەکرنا ڕاستەوخۆ)";
             }
         }
 
         function activateVip() {
             let code = document.getElementById('vipCodeInput').value.trim();
-            if(code === "777") { // پاسوۆردێ VIP
+
+            if(code === vipActiveCode && vipActiveCode !== "") {
+                vipActiveCode = ""; // Expire دەبێت و کەسێ دی نەشێت بکاربئینیت
                 currentUser.isVip = true;
                 updateAccountUI();
-                alert("پیرۆزە! هەژمارا تە بوو بە VIP و ناڤێ تە بوو بە Gold و سنۆر بۆ 20GB هاتە بلندکرن.");
+                alert("پیرۆزە! پاسوۆرد بەسەرچوو (Expired) و هەژمارا تە بوو بە VIP و ناڤێ تە بوو بە Gold!");
             } else {
-                alert("پاسوۆردێ VIP هەڵە یە! (پاسوۆردێ ڕاست: 777)");
+                alert("پاسوۆرد نە ڕاستە یان پێشتر هاتییە بکارئینان (Expired)! پاسوۆردێ کارا: 777");
             }
         }
 
-        document.getElementById('fileInput').addEventListener('change', async function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-
+        async function processUrlFile() {
+            let fileUrl = document.getElementById('fileUrlInput').value.trim();
             const listDiv = document.getElementById('fileList');
             const statusDiv = document.getElementById('progressStatus');
-            
-            const fileSizeGB = file.size / (1024 * 1024 * 1024);
-            let maxLimit = currentUser && currentUser.isVip ? 20.0 : 4.0;
+            const downloadContainer = document.getElementById('downloadContainer');
 
-            if (fileSizeGB > maxLimit) {
-                alert("قەبارێ فایلی ژ سنۆرێ تە پترە! (سنۆرێ تە: " + maxLimit + "GB). تکایە ببە VIP.");
+            if(!fileUrl) {
+                alert("تکایە لینکا ڕاستەوخۆ یا IPA/ZIP لێرە بنڤیسە!");
                 return;
             }
 
-            statusDiv.innerText = "⏳ خەریکە دەهێتە Unzip-کرن (" + fileSizeGB.toFixed(2) + " GB)...";
+            statusDiv.innerText = "⏳ خەریکە لینک دەهێتە داونلۆدکرن و ڤەکرن...";
             listDiv.innerHTML = "پرۆسە دەست پێ کر...";
+            downloadContainer.style.display = "none";
 
             try {
+                // ڤەکرنا لینکا دەرەکی ب ڕێکا پڕاکسی یان داونلۆدکردنا مستقیم
+                const response = await fetch(fileUrl);
+                if(!response.ok) throw new Error("نەشیایە لینکی ڤەکەت.");
+                
+                const blobFile = await response.blob();
+                
+                const fileSizeGB = blobFile.size / (1024 * 1024 * 1024);
+                let maxLimit = currentUser && currentUser.isVip ? 20.0 : 4.0;
+
+                if (fileSizeGB > maxLimit) {
+                    alert("قەبارێ فایلی ژ سنۆرێ تە پترە! (سنۆرێ تە: " + maxLimit + "GB).");
+                    return;
+                }
+
                 const startTime = performance.now();
                 const zip = new JSZip();
-                
-                const zipContent = await zip.loadAsync(file, {
-                    checkCRC32: false
-                });
+                const zipContent = await zip.loadAsync(blobFile, { checkCRC32: false });
                 
                 const endTime = performance.now();
                 const totalTime = ((endTime - startTime) / 1000).toFixed(1);
@@ -329,14 +387,32 @@
                         break;
                     }
                 }
-
                 listDiv.innerHTML += filesHtml;
+
+                // دروستکرنا فایلێ بۆ داونلۆدکرنێ بۆ ناو Files App
+                const newZip = new JSZip();
+                for (let filename of Object.keys(zipContent.files)) {
+                    if (!zipContent.files[filename].dir) {
+                        let content = await zipContent.files[filename].async("blob");
+                        newZip.file(filename, content);
+                    }
+                }
+
+                const contentBlob = await newZip.generateAsync({ type: "blob" });
+                const blobUrl = URL.createObjectURL(contentBlob);
                 
+                let downloadBtn = document.getElementById('downloadBtn');
+                downloadBtn.href = blobUrl;
+                downloadBtn.download = "Extracted_Payload.zip";
+                
+                downloadContainer.style.display = "block";
+                statusDiv.innerText = "✅ ئامادە یە! کلیک ل دوگمەیا خوارێ بکە دا بچیتە ناڤ بەرنامێ (Files App).";
+
             } catch (err) {
-                statusDiv.innerText = "❌ خەلەتی لە دەمێ ڤەکرنا فایلی پەیابوو!";
-                listDiv.innerHTML = "تکایە دڵنیا بە فایلا IPA یا درستە.";
+                statusDiv.innerText = "❌ خەلەتی: لینک نەڕاستە یان ڕێگرییا CORS هەەیە!";
+                listDiv.innerHTML = "تکایە دڵنیا بە لینکا فایلی ڕاستەوخۆیە.";
             }
-        });
+        }
     </script>
 
 </body>

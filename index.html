@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YUSEEF VIP - 6GB ULTRA UNZIPPER</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+        body {
+            background-color: #04070f;
+            color: #ffffff;
+            font-family: sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .box {
+            max-width: 500px;
+            margin: 20px auto;
+            background: #0b111e;
+            padding: 25px;
+            border-radius: 20px;
+            border: 1px solid #182440;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+        /* دیزاینا لۆگۆیێ تاجێ */
+        .logo-container {
+            margin-bottom: 15px;
+        }
+        .logo-container img {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #00d2ff;
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.4);
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .upload-btn {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-block;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+            font-size: 15px;
+            box-shadow: 0 4px 15px rgba(59, 130, 246,.4);
+        }
+        #fileList {
+            text-align: right;
+            background: #04070f;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #1f3059;
+            max-height: 250px;
+            overflow-y: auto;
+            font-size: 12px;
+            color: #00d2ff;
+        }
+        h2 {
+            color: #00d2ff;
+            font-size: 18px;
+            margin-top: 5px;
+        }
+        .progress {
+            color: #ffcc00;
+            font-size: 13px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <!-- لۆگۆیا تاجێ ل سەرێ مالپەڕی -->
+        <div class="logo-container">
+            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=200&auto=format&fit=crop" id="siteLogo" alt="Crown Logo">
+        </div>
+
+        <h2>YUSEEF VIP UNZIPPER</h2>
+        <p style="font-size: 12px; color: #ffcc00; margin-bottom: 15px;">فایلا خۆ (هەتا 6GB) بار بکە، زۆر بە لەز دەهێتە ڤەکرن</p>
+        
+        <label class="upload-btn">
+            فایلا IPA یان ZIP هەلبژێرە
+            <input type="file" id="fileInput" accept=".ipa,.zip">
+        </label>
+        
+        <div id="progressStatus" class="progress"></div>
+        
+        <div id="fileList">هێشتا چ فایل نەهاتینە بارکرن...</div>
+    </div>
+
+    <script>
+        document.getElementById('fileInput').addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const listDiv = document.getElementById('fileList');
+            const statusDiv = document.getElementById('progressStatus');
+            
+            const fileSizeGB = file.size / (1024 * 1024 * 1024);
+            if (fileSizeGB > 6.0) {
+                alert("قەبارێ فایلی ژ 6GB پترە!");
+                return;
+            }
+
+            statusDiv.innerText = "⏳ چاوەڕێ بە، دەهێتە خواندن (" + fileSizeGB.toFixed(2) + " GB)...";
+            listDiv.innerHTML = "پرۆسە دەست پێ کر...";
+
+            try {
+                const startTime = performance.now();
+                const zip = new JSZip();
+                
+                const zipContent = await zip.loadAsync(file, {
+                    checkCRC32: false
+                });
+                
+                const endTime = performance.now();
+                const totalTime = ((endTime - startTime) / 1000).toFixed(1);
+
+                statusDiv.innerText = "✅ سەرکەفتبوو! د (" + totalTime + " چرکە) دە هاتە ڤەکرن.";
+                listDiv.innerHTML = "<b style='color: #ffcc00;'>فایلێن ناڤ فایلا IPA:</b><br><br>";
+                
+                let filesHtml = "";
+                let count = 0;
+                
+                for (let filename of Object.keys(zipContent.files)) {
+                    filesHtml += "📄 " + filename + "<br>";
+                    count++;
+                    if(count > 1000) {
+                        filesHtml += "<br>... و پتر ژ هەزار فایلێن دی ...";
+                        break;
+                    }
+                }
+
+                listDiv.innerHTML += filesHtml;
+                
+            } catch (err) {
+                statusDiv.innerText = "❌ خەلەتی پەیدا بوو ل دەمێ ڤەکرنێ!";
+                listDiv.innerHTML = "تکایە دڵنیا بە فایلا تە یا دروستە.";
+            }
+        });
+    </script>
+
+</body>
+</html>

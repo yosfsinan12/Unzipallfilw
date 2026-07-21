@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YUSEEF VIP - 6GB ULTRA UNZIPPER</title>
+    <title>YUSEEF_SINAN VIP</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         body {
@@ -11,92 +11,281 @@
             color: #ffffff;
             font-family: sans-serif;
             text-align: center;
-            padding: 20px;
+            padding: 15px;
+            margin: 0;
+            padding-bottom: 80px;
         }
         .box {
-            max-width: 500px;
-            margin: 20px auto;
+            max-width: 480px;
+            margin: 15px auto;
             background: #0b111e;
-            padding: 25px;
+            padding: 20px;
             border-radius: 20px;
             border: 1px solid #182440;
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
-        /* دیزاینا لۆگۆیێ تاجێ */
-        .logo-container {
-            margin-bottom: 15px;
-        }
         .logo-container img {
-            width: 90px;
-            height: 90px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid #00d2ff;
-            box-shadow: 0 0 20px rgba(0, 210, 255, 0.4);
-        }
-        input[type="file"] {
-            display: none;
-        }
-        .upload-btn {
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            color: white;
-            padding: 14px 20px;
-            border-radius: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            display: inline-block;
-            width: 100%;
-            box-sizing: border-box;
-            margin-bottom: 15px;
-            font-size: 15px;
-            box-shadow: 0 4px 15px rgba(59, 130, 246,.4);
-        }
-        #fileList {
-            text-align: right;
-            background: #04070f;
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid #1f3059;
-            max-height: 250px;
-            overflow-y: auto;
-            font-size: 12px;
-            color: #00d2ff;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
         }
         h2 {
             color: #00d2ff;
             font-size: 18px;
-            margin-top: 5px;
+            margin: 10px 0;
         }
-        .progress {
-            color: #ffcc00;
-            font-size: 13px;
-            margin-bottom: 10px;
+        input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #1f3059;
+            background: #04070f;
+            color: white;
+            text-align: center;
+            margin-bottom: 12px;
+            outline: none;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        .btn {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
             font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+            margin-bottom: 10px;
+        }
+        .btn-vip {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+        }
+        .screen {
+            display: none;
+        }
+        .active {
+            display: block;
+        }
+        #fileList {
+            text-align: right;
+            background: #04070f;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #1f3059;
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 12px;
+            color: #00d2ff;
+            margin-top: 10px;
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #080d1a;
+            border-top: 1px solid #182440;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .nav-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .nav-btn.active-tab {
+            color: #00d2ff;
+        }
+        .badge {
+            background: #ef4444;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-top: 2px;
+        }
+        .badge-vip {
+            background: #f59e0b;
+        }
+        /* ڕەنگێ زێڕینی بۆ ناڤی */
+        .gold-name {
+            color: #fbbf24 !important;
+            text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
         }
     </style>
 </head>
 <body>
 
-    <div class="box">
-        <!-- لۆگۆیا تاجێ ل سەرێ مالپەڕی -->
-        <div class="logo-container">
-            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=200&auto=format&fit=crop" id="siteLogo" alt="Crown Logo">
+    <!-- 1. پەڕەیا تۆمارکرنێ -->
+    <div id="authScreen" class="screen active">
+        <div class="box">
+            <div class="logo-container">
+                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=200&auto=format&fit=crop" alt="Logo">
+            </div>
+            <h2>YUSEEF_SINAN VIP</h2>
+            <p style="font-size: 11px; color: #ffcc00; margin-bottom: 15px;">ناڤ و پاسوۆردێ خۆ بنڤیسە بۆ دروستکرنا هەژماری</p>
+            
+            <input type="text" id="regUser" placeholder="ناڤێ خۆ (Username)...">
+            <input type="password" id="regPass" placeholder="پاسوۆرد (Password)...">
+            <button class="btn" onclick="registerUser()">تۆمارکرن و چوونا ژوورێ</button>
         </div>
+    </div>
 
-        <h2>YUSEEF VIP UNZIPPER</h2>
-        <p style="font-size: 12px; color: #ffcc00; margin-bottom: 15px;">فایلا خۆ (هەتا 6GB) بار بکە، زۆر بە لەز دەهێتە ڤەکرن</p>
-        
-        <label class="upload-btn">
-            فایلا IPA یان ZIP هەلبژێرە
-            <input type="file" id="fileInput" accept=".ipa,.zip">
-        </label>
-        
-        <div id="progressStatus" class="progress"></div>
-        
-        <div id="fileList">هێشتا چ فایل نەهاتینە بارکرن...</div>
+    <!-- 2. پەڕەیا سەرەکی یا Unzip -->
+    <div id="unzipScreen" class="screen">
+        <div class="box">
+            <h2>YUSEEF_SINAN UNZIPPER</h2>
+            <!-- لێرە ناڤێ بەکارهێنەری دگەل نیشانا VIP دبیە سەرەتا -->
+            <div style="font-size: 13px; margin-bottom: 10px;">
+                بەخێر هاتێ، <span id="welcomeUsername" style="font-weight: bold; color: #00d2ff;"></span>
+            </div>
+            <p id="userLimitText" style="font-size: 11px; color: #ffcc00; margin-bottom: 12px;"></p>
+            
+            <label class="btn" style="display: block; cursor: pointer;">
+                فایلا IPA یان ZIP هەلبژێرە
+                <input type="file" id="fileInput" accept=".ipa,.zip" style="display: none;">
+            </label>
+            
+            <div id="progressStatus" style="font-size: 12px; color: #38bdf8; font-weight: bold; margin: 8px 0;"></div>
+            <div id="fileList">هێشتا چ فایل نەهاتینە بارکرن...</div>
+        </div>
+    </div>
+
+    <!-- 3. پەڕەیا هەژماری و VIP -->
+    <div id="accountScreen" class="screen">
+        <div class="box">
+            <h2>هەژمارا من (Account)</h2>
+            <div style="background: #04070f; padding: 15px; border-radius: 10px; border: 1px solid #1f3059; text-align: right; font-size: 13px; margin-bottom: 15px;">
+                <p>👤 ناڤ: <span id="accName" style="font-weight: bold;"></span></p>
+                <p>🆔 ناسنامە (ID): <span id="accId" style="color: #ffcc00; font-weight: bold;"></span></p>
+                <p>⭐ ڕەوشا هەژماری: <span id="accStatus" style="color: #ef4444; font-weight: bold;">عادی (Standard)</span></p>
+            </div>
+
+            <p style="font-size: 11px; color: #ffcc00; margin-bottom: 8px;">ببە VIP بۆ ڤەکرنا فایلێن هەتا 20GB:</p>
+            <input type="password" id="vipCodeInput" placeholder="پاسوۆردێ VIP بنڤیسە...">
+            <button class="btn btn-vip" onclick="activateVip()">چالاککرنا VIP (پاسوۆرد: 777)</button>
+        </div>
+    </div>
+
+    <!-- باڕا خوارێ -->
+    <div class="bottom-nav" id="bottomNav" style="display: none;">
+        <button class="nav-btn active-tab" onclick="switchTab('unzip', this)">
+            📂
+            <span>Unzip File</span>
+        </button>
+        <button class="nav-btn" onclick="switchTab('account', this)">
+            👤
+            <span>Account</span>
+            <span id="navVipBadge" class="badge">Standard</span>
+        </button>
     </div>
 
     <script>
+        let currentUser = null;
+
+        function registerUser() {
+            let u = document.getElementById('regUser').value.trim();
+            let p = document.getElementById('regPass').value.trim();
+
+            if(u === "" || p === "") {
+                alert("تکایە ناڤ و پاسوۆردی بنڤیسە!");
+                return;
+            }
+
+            currentUser = {
+                username: u,
+                password: p,
+                id: Math.floor(10000 + Math.random() * 90000).toString(), // ID ژ 5 ژمارەکان پێک دهێت
+                isVip: false
+            };
+
+            document.getElementById('authScreen').classList.remove('active');
+            document.getElementById('unzipScreen').classList.add('active');
+            document.getElementById('bottomNav').style.display = 'flex';
+
+            updateAccountUI();
+            alert("بەخێر هاتێ، هژمارا تە هاتە دروستکرن!");
+        }
+
+        function switchTab(tabName, btn) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-tab'));
+
+            btn.classList.add('active-tab');
+
+            if(tabName === 'unzip') {
+                document.getElementById('unzipScreen').classList.add('active');
+            } else if(tabName === 'account') {
+                document.getElementById('accountScreen').classList.add('active');
+            }
+        }
+
+        function updateAccountUI() {
+            if(!currentUser) return;
+
+            let nameDisplay = currentUser.username;
+            let welcomeEl = document.getElementById('welcomeUsername');
+            let accNameEl = document.getElementById('accName');
+
+            if(currentUser.isVip) {
+                // ئەگەر VIP ببت، نیشانەک و ڕەنگێ Gold ل ناڤی زێدە دبت
+                nameDisplay = "👑 " + currentUser.username + " [VIP]";
+                welcomeEl.innerHTML = `<span class="gold-name">${nameDisplay}</span>`;
+                accNameEl.innerHTML = `<span class="gold-name">${nameDisplay}</span>`;
+            } else {
+                welcomeEl.innerText = nameDisplay;
+                accNameEl.innerText = nameDisplay;
+                accNameEl.style.color = "#00d2ff";
+            }
+            
+            document.getElementById('accId').innerText = currentUser.id;
+            
+            let statusSpan = document.getElementById('accStatus');
+            let badgeSpan = document.getElementById('navVipBadge');
+            let limitText = document.getElementById('userLimitText');
+
+            if(currentUser.isVip) {
+                statusSpan.innerText = "VIP (زێڕینی)";
+                statusSpan.style.color = "#fbbf24";
+                badgeSpan.innerText = "VIP";
+                badgeSpan.className = "badge badge-vip";
+                limitText.innerText = "⭐ هەژمارا تە VIPـە: سنۆرێ بارکرنێ هەتا 20GB";
+            } else {
+                statusSpan.innerText = "عادی (Standard)";
+                statusSpan.style.color = "#ef4444";
+                badgeSpan.innerText = "Standard";
+                badgeSpan.className = "badge";
+                limitText.innerText = "📦 سنۆرێ عادی: هەتا 4GB (د 35 چرکەیان دا دئێخە دەر)";
+            }
+        }
+
+        function activateVip() {
+            let code = document.getElementById('vipCodeInput').value.trim();
+            if(code === "777") { // پاسوۆردێ VIP
+                currentUser.isVip = true;
+                updateAccountUI();
+                alert("پیرۆزە! هەژمارا تە بوو بە VIP و ناڤێ تە بوو بە Gold و سنۆر بۆ 20GB هاتە بلندکرن.");
+            } else {
+                alert("پاسوۆردێ VIP هەڵە یە! (پاسوۆردێ ڕاست: 777)");
+            }
+        }
+
         document.getElementById('fileInput').addEventListener('change', async function(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -105,12 +294,14 @@
             const statusDiv = document.getElementById('progressStatus');
             
             const fileSizeGB = file.size / (1024 * 1024 * 1024);
-            if (fileSizeGB > 6.0) {
-                alert("قەبارێ فایلی ژ 6GB پترە!");
+            let maxLimit = currentUser && currentUser.isVip ? 20.0 : 4.0;
+
+            if (fileSizeGB > maxLimit) {
+                alert("قەبارێ فایلی ژ سنۆرێ تە پترە! (سنۆرێ تە: " + maxLimit + "GB). تکایە ببە VIP.");
                 return;
             }
 
-            statusDiv.innerText = "⏳ چاوەڕێ بە، دەهێتە خواندن (" + fileSizeGB.toFixed(2) + " GB)...";
+            statusDiv.innerText = "⏳ خەریکە دەهێتە Unzip-کرن (" + fileSizeGB.toFixed(2) + " GB)...";
             listDiv.innerHTML = "پرۆسە دەست پێ کر...";
 
             try {
@@ -124,8 +315,8 @@
                 const endTime = performance.now();
                 const totalTime = ((endTime - startTime) / 1000).toFixed(1);
 
-                statusDiv.innerText = "✅ سەرکەفتبوو! د (" + totalTime + " چرکە) دە هاتە ڤەکرن.";
-                listDiv.innerHTML = "<b style='color: #ffcc00;'>فایلێن ناڤ فایلا IPA:</b><br><br>";
+                statusDiv.innerText = "✅ سەرکەفتبوو! د (" + totalTime + " چرکە) دا هاتە Unzip-کرن.";
+                listDiv.innerHTML = "<b style='color: #ffcc00;'>فایلێن ناو فایلا IPA (Payload):</b><br><br>";
                 
                 let filesHtml = "";
                 let count = 0;
@@ -142,8 +333,8 @@
                 listDiv.innerHTML += filesHtml;
                 
             } catch (err) {
-                statusDiv.innerText = "❌ خەلەتی پەیدا بوو ل دەمێ ڤەکرنێ!";
-                listDiv.innerHTML = "تکایە دڵنیا بە فایلا تە یا دروستە.";
+                statusDiv.innerText = "❌ خەلەتی لە دەمێ ڤەکرنا فایلی پەیابوو!";
+                listDiv.innerHTML = "تکایە دڵنیا بە فایلا IPA یا درستە.";
             }
         });
     </script>
